@@ -981,8 +981,16 @@ namespace System.Linq
 
         private static IEnumerable<TSource> ReverseIterator<TSource>(IEnumerable<TSource> source)
         {
-            Buffer<TSource> buffer = new Buffer<TSource>(source);
-            for (int i = buffer.count - 1; i >= 0; i--) yield return buffer.items[i];
+            IList<TSource> listoft = source as IList<TSource>;
+            if (listoft != null)
+            {
+                for (int i = listoft.Count - 1; i >= 0; i--) yield return listoft[i];
+            }
+            else
+            {
+                Buffer<TSource> buffer = new Buffer<TSource>(source);
+                for (int i = buffer.count - 1; i >= 0; i--) yield return buffer.items[i];
+            }
         }
 
         public static bool SequenceEqual<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second)
